@@ -16,19 +16,36 @@ catch (Exception $e)
 die ('Erreur : '.$e -> getMessage());
 }
 
-$reponse = $bdd -> query ('SELECT nom_client, modele_id FROM clients');
+$reponse_client = $bdd -> query ('SELECT * FROM clients');
+$reponse_modele = $bdd -> query ('SELECT modele_id, reference FROM modeles');
 
-if (!$reponse)
+if (!$reponse_client)
 {
    print_r($bdd->errorInfo());
 }
 
-while ($row = $reponse -> fetch ())
+while ($row = $reponse_client -> fetch ())
 {
-echo $row ['nom_client'].'<br/>';
+$id = $row ['client_id'];
+$nom_client = $row['nom_client'];
+$modele = $row['modele_id'];
+
+$table [$id][$nom_client] = $modele;
 }
 
-$reponse -> closeCursor ();
+while ($row2 = $reponse_modele -> fetch())
+{
+$reference = $row2['reference'];
+$modele_id = $row2 ['modele_id'];
+
+$table [$id][$nom_client] = $modele_id 
+}
+
+
+print_r ($table2);
+
+$reponse_client -> closeCursor ();
+$reponse_modele -> closeCursor ();
 
 ?>
 </body>
