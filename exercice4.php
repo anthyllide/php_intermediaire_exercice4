@@ -6,24 +6,29 @@
 <link href="#" rel="stylesheet" type="text/css"/>
 </head>
 <body>
+
 <?php
 try {
-$bdd = new PDO ('mysql:host = localhost; bdname=projet_modeles', 'root', '');
+$bdd = new PDO ('mysql:host=localhost; dbname=projet_modeles', 'root', '');
 }
 catch (Exception $e)
 {
-die ('erreur : '.$e -> getMessage());
+die ('Erreur : '.$e -> getMessage());
 }
 
-$donnees = $bdd -> query ('SELECT nom_client, modele_id FROM clients');
+$reponse = $bdd -> query ('SELECT nom_client, modele_id FROM clients');
 
-while ($row = $donnees -> fetch ())
+if (!$reponse)
 {
-echo $row ['nom_client'];
+   print_r($bdd->errorInfo());
 }
 
+while ($row = $reponse -> fetch ())
+{
+echo $row ['nom_client'].'<br/>';
+}
 
-
+$reponse -> closeCursor ();
 
 ?>
 </body>
