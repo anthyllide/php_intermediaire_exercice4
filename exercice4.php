@@ -16,33 +16,30 @@ catch (Exception $e)
 die ('Erreur : '.$e -> getMessage());
 }
 
-$reponse_client = $bdd -> query ('SELECT * FROM clients');
-$reponse_modele = $bdd -> query ('SELECT modele_id, reference FROM modeles');
-
-if (!$reponse_client)
-{
-   print_r($bdd->errorInfo());
-}
+$reponse_client = $bdd -> query ('SELECT nom_client, modele_id FROM clients');
 
 while ($row = $reponse_client -> fetch ())
 {
-$id = $row ['client_id'];
+
 $nom_client = $row['nom_client'];
 $modele = $row['modele_id'];
 
-$table [$id][$nom_client] = $modele;
+$table_client [$nom_client] = $modele;
+
+
+$reponse_modele = $bdd -> prepare ('SELECT reference FROM modeles WHERE modele_id = ?');
+$reponse_modele -> execute (array($modele));
+
+	while ($row2 = $reponse_modele -> fetch())
+	{
+
+	?>
+	<p><?php echo 'Le '.$nom_client. ' a commandé la '.$row2 ['reference']. '.';?></p>
+	
+<?php
+	}
+
 }
-
-while ($row2 = $reponse_modele -> fetch())
-{
-$reference = $row2['reference'];
-$modele_id = $row2 ['modele_id'];
-
-$table [$id][$nom_client] = $modele_id 
-}
-
-
-print_r ($table2);
 
 $reponse_client -> closeCursor ();
 $reponse_modele -> closeCursor ();
